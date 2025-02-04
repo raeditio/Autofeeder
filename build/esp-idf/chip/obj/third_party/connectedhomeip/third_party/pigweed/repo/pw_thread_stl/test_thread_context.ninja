@@ -1,7 +1,0 @@
-defines = -DNDEBUG
-framework_dirs =
-include_dirs = -I../../../../connectedhomeip/connectedhomeip/config/esp32/third_party/connectedhomeip/third_party/pigweed/repo/pw_thread_stl/public -I../../../../connectedhomeip/connectedhomeip/config/esp32/third_party/connectedhomeip/third_party/pigweed/repo/pw_thread_stl/test_thread_context_public_overrides -I../../../../connectedhomeip/connectedhomeip/config/esp32/third_party/connectedhomeip/third_party/pigweed/repo/pw_thread_stl/thread_public_overrides -I../../../../connectedhomeip/connectedhomeip/config/esp32/third_party/connectedhomeip/third_party/pigweed/repo/pw_thread/public
-target_output_name = test_thread_context
-
-
-build phony/third_party/connectedhomeip/third_party/pigweed/repo/pw_thread_stl/test_thread_context: phony || phony/third_party/connectedhomeip/third_party/pigweed/repo/pw_thread_stl/thread phony/third_party/connectedhomeip/third_party/pigweed/repo/pw_thread/thread.facade phony/third_party/connectedhomeip/third_party/pigweed/repo/pw_thread/id phony/third_party/connectedhomeip/third_party/pigweed/repo/pw_function/pw_function phony/third_party/connectedhomeip/third_party/pigweed/repo/pw_function/config phony/third_party/connectedhomeip/third_party/pigweed/repo/third_party/fuchsia/repo/sdk/lib/fit/fit phony/third_party/connectedhomeip/third_party/pigweed/repo/pw_assert/check phony/third_party/connectedhomeip/third_party/pigweed/repo/pw_assert_log/check_backend

@@ -1,7 +1,0 @@
-defines = -DNDEBUG
-framework_dirs =
-include_dirs =
-target_output_name = custom_buildconfig
-
-
-build phony/ABS_PATH/home/raeditio/esp/platform/ESP32_custom/custom_buildconfig: phony || phony/ABS_PATH/home/raeditio/esp/platform/ESP32_custom/gen_custom_buildconfig
