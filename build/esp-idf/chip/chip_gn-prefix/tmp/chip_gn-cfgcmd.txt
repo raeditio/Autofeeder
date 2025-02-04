@@ -1,0 +1,1 @@
+cmd='/home/raeditio/esp/esp-matter/connectedhomeip/connectedhomeip/.environment/cipd/packages/pigweed/gn;--root=/home/raeditio/esp/esp-matter/connectedhomeip/connectedhomeip/config/esp32;gen;--check;--fail-on-unused-args;/home/raeditio/esp/esp-matter/CAMautofeeder/build/esp-idf/chip'
