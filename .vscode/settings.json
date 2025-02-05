@@ -1,4 +1,8 @@
 {
     "idf.port": "/dev/ttyUSB0",
-    "idf.flashType": "UART"
+    "idf.flashType": "UART",
+    "files.associations": {
+        "*.puml": "python",
+        "thread": "cpp"
+    }
 }

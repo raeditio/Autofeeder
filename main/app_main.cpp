@@ -158,12 +158,16 @@ extern "C" void app_main() {
     ABORT_APP_ON_FAILURE(node != nullptr, ESP_LOGE(TAG, "Failed to create Matter node"));
 
     // Configure the fan control cluster (used to control servo position)
-    fan::config_t autofeeder_config;
-    autofeeder_config.fan_control.percent_setting = 50; // Default midpoint (90°)
-    autofeeder_config.fan_control.percent_current = 50; // Start at midpoint
+    // fan::config_t autofeeder_config;
+    // autofeeder_config.fan_control.percent_setting = 10; // Default midpoint (90°)
+    // autofeeder_config.fan_control.percent_current = 10; // Start at midpoint
+
+    // Optional Switch mode (used to turn the autofeeder on/off)
+    on_off_light::config_t autofeeder_config;
 
     // Create the endpoint
-    endpoint_t *endpoint = fan::create(node, &autofeeder_config, ENDPOINT_FLAG_NONE, autofeeder_handle);
+    // endpoint_t *endpoint = fan::create(node, &autofeeder_config, ENDPOINT_FLAG_NONE, autofeeder_handle);     // Fan type
+    endpoint_t *endpoint = on_off_light::create(node, &autofeeder_config, ENDPOINT_FLAG_NONE, autofeeder_handle); // Switch type
     ABORT_APP_ON_FAILURE(endpoint != nullptr, ESP_LOGE(TAG, "Failed to create fan endpoint"));
 
     autofeeder_endpoint_id = endpoint::get_id(endpoint);

@@ -22,7 +22,7 @@ static mcpwm_gen_handle_t generator = NULL;
 static mcpwm_timer_handle_t timer = NULL;
 
 // Global variable to store the last commanded angle (in degrees)
-static int last_angle = 0;
+static int last_angle = -90;
 
 // Define servo parameters for an SG90 (pulse widths corresponding to -90° to +90°)
 #define SERVO_MIN_PULSEWIDTH_US 1000  // Pulse width for -90°
@@ -80,7 +80,7 @@ esp_err_t app_driver_servo_init(gpio_num_t gpio) {
     ESP_ERROR_CHECK(mcpwm_new_generator(mcpwm_oper, &generator_config, &generator));
 
     // Set initial servo position to 0° (center)
-    last_angle = 0;
+    last_angle = -90;
     ESP_ERROR_CHECK(mcpwm_comparator_set_compare_value(comparator, example_angle_to_compare(0)));
     ESP_LOGI(TAG, "Servo initialized on GPIO %d", gpio);
 
@@ -134,11 +134,21 @@ esp_err_t app_driver_attribute_update(app_driver_handle_t driver_handle, uint16_
                                        uint32_t cluster_id, uint32_t attribute_id, esp_matter_attr_val_t *val) {
     ESP_LOGI(TAG, "Attribute update: Cluster ID: %lu, Attribute ID: %lu", cluster_id, attribute_id);
 
+    // Handle the FanControl cluster
     if (cluster_id == FanControl::Id) {
         if (attribute_id == FanControl::Attributes::PercentSetting::Id) {
             uint8_t speed = val->val.u8;
             int angle = map_speed_to_servo_angle(speed);
             return set_servo_angle(angle);
+        }
+    }
+    // Handle the Switch cluster
+    else if (val) {
+        bool on = val->val.b;
+        if (on) {
+            return set_servo_angle(90);
+        } else {
+            return set_servo_angle(-90);
         }
     }
     return ESP_OK;
@@ -163,18 +173,19 @@ esp_err_t app_driver_servo_set_defaults(uint16_t endpoint_id)
     /* Set default position based on attribute PercentSetting.
        Here, we assume that a speed of 50% corresponds to a 0° (center) position. */
     esp_matter_attr_val_t val = esp_matter_invalid(NULL);
-    attribute_t *attribute = attribute::get(endpoint_id, FanControl::Id, FanControl::Attributes::PercentSetting::Id);
+    // attribute_t *attribute = attribute::get(endpoint_id, FanControl::Id, FanControl::Attributes::PercentSetting::Id);       // FanControl cluster
+    attribute_t *attribute = attribute::get(endpoint_id, Switch::Id, Switch::Attributes::CurrentPosition::Id); // Switch cluster
 
     if (attribute) {
         esp_matter::attribute::get_val(attribute, &val);
         // If the received value is out of the expected 0-100 range, default to 50%
         if (val.val.u8 > 100) {  
-            val.val.u8 = 50;
-            ESP_LOGI(TAG, "Setting default servo position to 0° (50%% speed)");
+            val.val.u8 = 0;
+            ESP_LOGI(TAG, "Setting default servo position to -90° (0%% speed)");
         }
     } else {
-        ESP_LOGW(TAG, "Attribute PercentSetting not found, setting to default (0°)");
-        val.val.u8 = 50;
+        ESP_LOGW(TAG, "Attribute PercentSetting not found, setting to default (-90°)");
+        val.val.u8 = 0;
     }
 
     /* Apply default servo position */
